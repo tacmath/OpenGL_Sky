@@ -28,7 +28,7 @@ private:
 public:
 	// the window context
 	GLFWwindow*     context;
-	glm::vec2		size;
+	glm::ivec2		size;
 
 	Window() {
         char path[1024];
@@ -52,9 +52,11 @@ public:
         glfwMakeContextCurrent(context);
 
         gladLoadGL();
-        glViewport(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+        int width, height;
+        glfwGetFramebufferSize(context, &width, &height);
+        glViewport(0, 0, width, height);
         glfwSetInputMode(context, GLFW_STICKY_KEYS, GL_TRUE);
-        size = glm::vec2((float)DEFAULT_WINDOW_WIDTH, (float)DEFAULT_WINDOW_HEIGHT);
+        size = glm::ivec2(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         enableGlParam();
 
         monitor = glfwGetPrimaryMonitor();
@@ -67,13 +69,10 @@ public:
 
     void Windowed(void) {
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-        glfwSetWindowMonitor(context, nullptr, 0, 0, (int)size.x, (int)size.y, mode->refreshRate);
+        glfwSetWindowMonitor(context, nullptr, 0, 0, size.x, size.y, mode->refreshRate);
     }
 
     void enableGlParam(void) {
-        glEnable(GL_DEPTH_TEST);
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CCW);
     }
 
     ~Window() {

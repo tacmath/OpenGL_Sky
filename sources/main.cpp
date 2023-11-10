@@ -63,7 +63,17 @@ void run(const Window& window) {
     float diff = 0;
     float time = 0;
     int status = 1;
+    Shader  shader;
+    VBO     vbo;
+    VAO     vao;
+    float   vertices[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f };
 
+    shader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
+    shader.Activate();
+    vbo.Gen(vertices, sizeof(vertices));
+    vao.Gen();
+    vao.LinkAttrib(vbo, 0, 2, GL_FLOAT, sizeof(float), 0);
+    vao.Bind();
     while (status) {
         time = (float)glfwGetTime();
 
@@ -73,11 +83,16 @@ void run(const Window& window) {
             if (glfwWindowShouldClose(window.context) == 1)
                 status = 0;
 
-            glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+            shader.setFloat("time", time);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
             glfwSwapBuffers(window.context);
             previousFrameTime = time/* - (diff - MIN_FRAME_DELAY)*/;
         }
     }
+    vao.Delete();
+    vbo.Delete();
+    shader.Delete();
 }
 
 /*
