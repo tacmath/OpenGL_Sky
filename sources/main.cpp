@@ -77,12 +77,7 @@ void run(const Window& window) {
 
             newShader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
             if (newShader.isCompiled()) {
-                *shader = std::move(*shader);
-                *shader = std::move(*shader);
-                *shader = std::move(*shader);
                 *shader = std::move(newShader);
-                *shader = std::move(*shader);
-                *shader = std::move(*shader);
                 shader->Activate();
             }
         }
