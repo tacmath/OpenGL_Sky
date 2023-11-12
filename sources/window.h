@@ -55,7 +55,7 @@ public:
         int width, height;
         glfwGetFramebufferSize(context, &width, &height);
         glViewport(0, 0, width, height);
-        glfwSetInputMode(context, GLFW_STICKY_KEYS, GL_TRUE);
+        glfwSetInputMode(context, GLFW_STICKY_KEYS, GL_FALSE);
         size = glm::ivec2(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         enableGlParam();
 

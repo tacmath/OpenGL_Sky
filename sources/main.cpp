@@ -68,6 +68,26 @@ void run(const Window& window) {
     VAO     vao;
     float   vertices[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f };
 
+    glfwSetWindowUserPointer(window.context, &shader);
+    glfwSetKeyCallback(window.context, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        Shader* shader = (Shader*)glfwGetWindowUserPointer(window);
+
+        if (key == GLFW_KEY_R && action == GLFW_PRESS) { // reload the shader when r is pressed
+            Shader  newShader;
+
+            newShader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
+            if (newShader.isCompiled()) {
+                *shader = std::move(*shader);
+                *shader = std::move(*shader);
+                *shader = std::move(*shader);
+                *shader = std::move(newShader);
+                *shader = std::move(*shader);
+                *shader = std::move(*shader);
+                shader->Activate();
+            }
+        }
+    });
+
     shader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
     shader.Activate();
     vbo.Gen(vertices, sizeof(vertices));
