@@ -30,6 +30,9 @@
     <ClInclude Include="sources\VAO.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="sources\Stars.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\main.cpp">
@@ -47,12 +50,21 @@
     <ClCompile Include="sources\VBO.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="sources\Stars.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\skyFS.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
     <None Include="shaders\skyVS.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="shaders\starFS.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="shaders\starVS.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>

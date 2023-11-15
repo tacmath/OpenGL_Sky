@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="sources\glad.h" />
     <ClInclude Include="sources\shader.h" />
+    <ClInclude Include="sources\Stars.h" />
     <ClInclude Include="sources\VAO.h" />
     <ClInclude Include="sources\VBO.h" />
     <ClInclude Include="sources\window.h" />
@@ -137,12 +138,15 @@
     <ClCompile Include="sources\glad.c" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\shader.cpp" />
+    <ClCompile Include="sources\Stars.cpp" />
     <ClCompile Include="sources\VAO.cpp" />
     <ClCompile Include="sources\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\skyFS.glsl" />
     <None Include="shaders\skyVS.glsl" />
+    <None Include="shaders\starFS.glsl" />
+    <None Include="shaders\starVS.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

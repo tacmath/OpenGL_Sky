@@ -11,6 +11,8 @@ public:
 
     VBO() { ID = 0; };
     VBO(const void* data, size_t size);
+    //* data = pointer to the data buffer
+    //* size = the size of the buffer in bytes
     void Gen(const void* data, size_t size);
     void Delete();
 };

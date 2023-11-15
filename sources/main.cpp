@@ -2,6 +2,7 @@
 #include "window.h"
 #include "VAO.h"
 #include "VBO.h"
+#include "Stars.h"
 
 std::string glStringEnum(GLenum glenum)
 {
@@ -66,7 +67,8 @@ void run(const Window& window) {
     Shader  shader;
     VBO     vbo;
     VAO     vao;
-    float   vertices[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f };
+    float   vertices[] = {-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f };
+    Stars stars;
 
     glfwSetWindowUserPointer(window.context, &shader);
     glfwSetKeyCallback(window.context, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -100,7 +102,10 @@ void run(const Window& window) {
 
             shader.setFloat("time", time);
             glClear(GL_COLOR_BUFFER_BIT);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            vao.Bind();
+            shader.Activate();
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            stars.Draw();
             glfwSwapBuffers(window.context);
             previousFrameTime = time/* - (diff - MIN_FRAME_DELAY)*/;
         }

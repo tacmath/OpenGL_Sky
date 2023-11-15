@@ -17,9 +17,12 @@ public:
     // Generates a VAO ID
     void Gen();
     // Links Attribute such as a position or color to the VAO
-    void LinkAttrib(const void *data, GLuint vertexNumbers, GLuint layout, GLuint numComponents, GLuint type, GLuint typeSize, GLuint offset);
+    void LinkAttrib(const void *data, GLuint vertexNumbers, GLuint layout, GLuint numComponents, GLenum type, GLuint typeSize, GLuint offset);
     // Links VBO Attribute such as a position or color to the VAO
-    void LinkAttrib(VBO &vbo, GLuint layout, GLuint numComponents, GLuint type, GLuint typeSize, GLuint offset);
+    //* numComponents  = number of component per vertex (ex : 3 float for vec3)
+    //* type = data type can be GL_BYTE, GL_SHORT, GL_INT, GL_FLOAT, ...
+    //* typeSize = size of the type (ex : sizeof(GLfloat))
+    void LinkAttrib(const VBO &vbo, GLuint layout, GLuint numComponents, GLenum type, GLuint typeSize, GLuint offset);
     // Binds the VAO
     void Bind();
     // Unbinds the VAO
