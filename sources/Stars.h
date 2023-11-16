@@ -3,6 +3,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "shader.h"
+#include "camera.h"
 #include <random>
 #include <memory>
 
@@ -11,19 +12,20 @@
 #define STAR_SIZE 0.008f
 #define HALF_STAR_SIZE (STAR_SIZE * 0.5f)
 
-#include <iostream>
 #include <GLFW/glfw3.h>
 class Stars
 {
 private:
-	VBO		vbo;
-	VAO		vao;
-	Shader	shader;
+	VBO			vbo;
+	VAO			vao;
+	Shader		shader;
+	glm::mat4	VP;
 
 public:
 
 	Stars() {
 		shader.Load("shaders/starVS.glsl", "shaders/starFS.glsl");
+		VP = glm::perspective(glm::radians(70.0f), 1.7f, 0.1f, 100.0f);
 		InitStars();
 		glEnable(GL_CULL_FACE);
 	}
@@ -36,10 +38,16 @@ public:
 
 	void Draw() {
 		shader.Activate();
-		glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.7f, 0.1f, 100.0f) * glm::rotate(glm::mat4(1), -(float)glfwGetTime() *0.2f, glm::vec3(1, 0, 0));
-		shader.setMat4("matrix", projection);
+		glm::mat4 MVP = VP
+					/*glm::ortho(-0.6f, 0.6f, -0.4f, 0.4f, 0.0f, 2.0f)*/
+					* glm::rotate(glm::mat4(1), -(float)glfwGetTime() * 0.1f, glm::vec3(1, 0, 0));
+		shader.setMat4("matrix", MVP);
 		vao.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, NB_STARS * 6);
+	}
+
+	void SetVP(const Camera& camera) {
+		this->VP = camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView()));
 	}
 
 private:

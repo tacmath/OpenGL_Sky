@@ -3,6 +3,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "Stars.h"
+#include "camera.h"
 
 std::string glStringEnum(GLenum glenum)
 {
@@ -59,20 +60,47 @@ static void debug(void) {
         }, 0);
 }
 
+#include <functional>
+struct EventData {
+    Shader* shader;
+    std::function<void(double mouseX, double mouseY)>					onMouseMouvement;
+    std::function<void(int width, int height)>							onFramebufferSize;
+};
+
 void run(const Window& window) {
     float previousFrameTime = 0;
     float diff = 0;
     float time = 0;
     int status = 1;
+    EventData eventData;
     Shader  shader;
     VBO     vbo;
     VAO     vao;
     float   vertices[] = {-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f };
+    Camera camera;
     Stars stars;
 
-    glfwSetWindowUserPointer(window.context, &shader);
+    eventData.shader = &shader;
+    eventData.onMouseMouvement = [&](double mouseX, double mouseY) {
+        static double lastMouseX = DEFAULT_WINDOW_WIDTH / 2;
+        static double lastMouseY = DEFAULT_WINDOW_HEIGHT / 2;
+
+        
+        camera.Rotate((float)(mouseX - lastMouseX) * 0.5f, (float)(mouseY - lastMouseY) * 0.5f);
+        camera.Update();
+        stars.SetVP(camera);
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+    };
+
+    eventData.onFramebufferSize = [&](int width, int height) {
+        glViewport(0, 0, width, height);
+        camera.ChangePerspective(70, (float)width, (float)height, 0.0001f, 100.0f);
+        stars.SetVP(camera);
+    };
+    glfwSetWindowUserPointer(window.context, &eventData);
     glfwSetKeyCallback(window.context, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-        Shader* shader = (Shader*)glfwGetWindowUserPointer(window);
+        static Shader* shader = ((EventData*)glfwGetWindowUserPointer(window))->shader;
 
         if (key == GLFW_KEY_R && action == GLFW_PRESS) { // reload the shader when r is pressed
             Shader  newShader;
@@ -84,7 +112,17 @@ void run(const Window& window) {
             }
         }
     });
+    glfwSetCursorPosCallback(window.context, [](GLFWwindow* window, double xpos, double ypos) {
+        static EventData* callbacks = (EventData*)glfwGetWindowUserPointer(window);
+        callbacks->onMouseMouvement(xpos, ypos);
+    });
 
+    glfwSetFramebufferSizeCallback(window.context, [](GLFWwindow* window, int width, int height) {
+        static EventData* callbacks = (EventData*)glfwGetWindowUserPointer(window);
+        callbacks->onFramebufferSize(width, height);
+    });
+    camera.Init((float)window.size.x, (float)window.size.y, glm::vec3(0));
+    stars.SetVP(camera);
     shader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
     shader.Activate();
     vbo.Gen(vertices, sizeof(vertices));
@@ -97,7 +135,7 @@ void run(const Window& window) {
         diff = time - previousFrameTime;
         if (diff >= 0.03f) {
             glfwPollEvents();
-            if (glfwWindowShouldClose(window.context) == 1)
+            if (glfwWindowShouldClose(window.context) == 1 || glfwGetKey(window.context, GLFW_KEY_ESCAPE) == GLFW_PRESS)
                 status = 0;
 
             shader.setFloat("time", time);

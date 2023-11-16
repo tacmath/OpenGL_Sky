@@ -52,10 +52,9 @@ public:
         glfwMakeContextCurrent(context);
 
         gladLoadGL();
-        int width, height;
-        glfwGetFramebufferSize(context, &width, &height);
-        glViewport(0, 0, width, height);
-        glfwSetInputMode(context, GLFW_STICKY_KEYS, GL_FALSE);
+        SetWiewPort();
+        glfwSetCursorPos(context, DEFAULT_WINDOW_WIDTH / 2.0, DEFAULT_WINDOW_HEIGHT / 2.0);
+        glfwSetInputMode(context, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         size = glm::ivec2(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         enableGlParam();
 
@@ -70,6 +69,12 @@ public:
     void Windowed(void) {
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
         glfwSetWindowMonitor(context, nullptr, 0, 0, size.x, size.y, mode->refreshRate);
+    }
+
+    void SetWiewPort(void) {
+        int width, height;
+        glfwGetFramebufferSize(context, &width, &height);
+        glViewport(0, 0, width, height);
     }
 
     void enableGlParam(void) {
