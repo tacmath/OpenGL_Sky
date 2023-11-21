@@ -84,18 +84,19 @@ void run(const Window& window) {
     eventData.onMouseMouvement = [&](double mouseX, double mouseY) {
         static double lastMouseX = DEFAULT_WINDOW_WIDTH / 2;
         static double lastMouseY = DEFAULT_WINDOW_HEIGHT / 2;
-
         
         camera.Rotate((float)(mouseX - lastMouseX) * 0.5f, (float)(mouseY - lastMouseY) * 0.5f);
         camera.Update();
         stars.SetVP(camera);
+        glm::mat4 IVP = glm::inverse(camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView())));
+        shader.setMat4("IVP", IVP);
         lastMouseX = mouseX;
         lastMouseY = mouseY;
     };
 
     eventData.onFramebufferSize = [&](int width, int height) {
         glViewport(0, 0, width, height);
-        camera.ChangePerspective(70, (float)width, (float)height, 0.0001f, 100.0f);
+        camera.ChangePerspective(80, (float)width, (float)height, 0.0001f, 100.0f);
         stars.SetVP(camera);
     };
     glfwSetWindowUserPointer(window.context, &eventData);
@@ -106,10 +107,8 @@ void run(const Window& window) {
             Shader  newShader;
 
             newShader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
-            if (newShader.isCompiled()) {
+            if (newShader.isCompiled())
                 *shader = std::move(newShader);
-                shader->Activate();
-            }
         }
     });
     glfwSetCursorPosCallback(window.context, [](GLFWwindow* window, double xpos, double ypos) {
@@ -125,6 +124,8 @@ void run(const Window& window) {
     stars.SetVP(camera);
     shader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
     shader.Activate();
+    glm::mat4 IVP = glm::inverse(camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView())));
+    shader.setMat4("IVP", IVP);
     vbo.Gen(vertices, sizeof(vertices));
     vao.Gen();
     vao.LinkAttrib(vbo, 0, 2, GL_FLOAT, sizeof(float), 0);
