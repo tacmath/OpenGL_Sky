@@ -80,6 +80,8 @@ void run(const Window& window) {
     Camera camera;
     Stars stars;
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     eventData.shader = &shader;
     eventData.onMouseMouvement = [&](double mouseX, double mouseY) {
         static double lastMouseX = DEFAULT_WINDOW_WIDTH / 2;
@@ -140,6 +142,7 @@ void run(const Window& window) {
                 status = 0;
 
             shader.setFloat("time", time);
+            shader.setVec3("sunPos", glm::vec3(0.0, sin(time * 0.2), cos(time * 0.2)));
             glClear(GL_COLOR_BUFFER_BIT);
             vao.Bind();
             shader.Activate();

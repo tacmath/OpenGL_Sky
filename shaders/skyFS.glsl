@@ -4,15 +4,16 @@ out vec4 FragColor;
 in vec3 fragCoord;
 
 uniform float time = 0;
+uniform vec3 sunPos;
 
 //uniform vec3 sunPos = vec3(0, 0, 1);
-  uniform float cumulus = 0.6;
- const float Br = 0.0025;
- const float Bm = 0.0003;
- const float g =  0.9800;
- const vec3 nitrogen = vec3(0.650, 0.570, 0.475);
- const vec3 Kr = Br / pow(nitrogen, vec3(4.0));
- const vec3 Km = Bm / pow(nitrogen, vec3(0.84));
+//uniform float cumulus = 0.6;
+const float Br = 0.0025;
+const float Bm = 0.0003;
+const float g =  0.9800;
+const vec3 nitrogen = vec3(0.650, 0.570, 0.475);
+const vec3 Kr = Br / pow(nitrogen, vec3(4.0));
+const vec3 Km = Bm / pow(nitrogen, vec3(0.84));
 
 #define COLOR1 vec3(0.0960, 0.571, 0.960)
 #define COLOR2 vec3(0.781, 0.863, 0.930)
@@ -32,24 +33,22 @@ uniform float time = 0;
                    mix(hash(n + 270.0), hash(n + 271.0), f.x), f.y), f.z);
   }
 
-  const mat3 m = mat3(0.0, 1.60,  1.20, -1.6, 0.72, -0.96, -1.2, -0.96, 1.28);
-  float fbm(vec3 p)
-  {
-    float f = 0.0;
-    f += noise(p) / 2; p = m * p * 1.1;
-    f += noise(p) / 4; p = m * p * 1.2;
-    f += noise(p) / 6; p = m * p * 1.3;
-    f += noise(p) / 12; p = m * p * 1.4;
-    f += noise(p) / 24;
-    return f;
-  }
+//  const mat3 m = mat3(0.0, 1.60,  1.20, -1.6, 0.72, -0.96, -1.2, -0.96, 1.28);
+//  float fbm(vec3 p)
+//  {
+//    float f = 0.0;
+//    f += noise(p) / 2; p = m * p * 1.1;
+//    f += noise(p) / 4; p = m * p * 1.2;
+//    f += noise(p) / 6; p = m * p * 1.3;
+//    f += noise(p) / 12; p = m * p * 1.4;
+//    f += noise(p) / 24;
+//    return f;
+//  }
 
 
 
 void main()
 {
-    vec3 sunPos = vec3(0.0, sin(time * 0.2), cos(time * 0.2));
-
     vec3 coord = normalize(fragCoord); // try to not normalize to see the difference
     float mu = dot(normalize(coord), normalize(sunPos));
     float rayleigh = 3.0 / (8.0 * 3.14) * (1.0 + mu * mu);
@@ -61,11 +60,11 @@ void main()
     vec3 color = rayleigh * mie * extinction;
 
         // Cumulus Clouds
-    for (int i = 0; i < 3; i++)
-    {
-      float density = smoothstep(1.0 - cumulus, 1.0, fbm((0.7 + float(i) * 0.01) * coord.xyz / coord.y + time * 0.5));
-      color.rgb = mix(color.rgb, extinction * density * 5.0, min(density, 1.0) * max(coord.y, 0.0));
-    }
+//    for (int i = 0; i < 3; i++)
+//    {
+//      float density = smoothstep(1.0 - cumulus, 1.0, fbm((0.7 + float(i) * 0.01) * coord.xyz / coord.y + time * 0.5));
+//      color.rgb = mix(color.rgb, extinction * density * 5.0, min(density, 1.0) * max(coord.y, 0.0));
+//    }
 
     color += noise(coord * 1000) * 0.01;
   //  vec3 day_extinction = exp(-exp(-((pos.y + fsun.y * 4.0) * (exp(-pos.y * 16.0) + 0.1) / 80.0) / Br) * (exp(-pos.y * 16.0) + 0.1) * Kr / Br) * exp(-pos.y * exp(-pos.y * 8.0 ) * 4.0) * exp(-pos.y * 2.0) * 4.0;

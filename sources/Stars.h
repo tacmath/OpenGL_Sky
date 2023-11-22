@@ -37,10 +37,13 @@ public:
 	}
 
 	void Draw() {
+		float time = (float)glfwGetTime();
+
 		shader.Activate();
 		glm::mat4 MVP = VP
 					/*glm::ortho(-0.6f, 0.6f, -0.4f, 0.4f, 0.0f, 2.0f)*/
-					* glm::rotate(glm::mat4(1), -(float)glfwGetTime() * 0.1f, glm::vec3(1, 0, 0));
+					* glm::rotate(glm::mat4(1), -(float)time * 0.1f, glm::vec3(1, 0, 0));
+		shader.setVec3("sunPos", glm::vec3(0.0, sin(time * 0.2), cos(time * 0.2)));
 		shader.setMat4("matrix", MVP);
 		vao.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, NB_STARS * 6);
