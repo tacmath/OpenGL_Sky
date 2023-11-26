@@ -81,6 +81,9 @@ void Menu::UpdateUniforms() {
     shader->setVec3("SkyColor", uniforms.skyColor);
     shader->setVec3("VoidColor", uniforms.voidColor);
     shader->setVec3("NightColor", uniforms.nightColor);
+    for (const CustomUniform& uniform : uniforms.customUniforms) {
+        shader->setVec3(uniform.name, uniform.value);
+    }
 }
 
 void Menu::DrawMenu() {
@@ -93,17 +96,29 @@ void Menu::DrawMenu() {
   //  ImGui::SeparatorText("Options");
    // if (ImGui::CollapsingHeader("Options")) {
         
-        if (ImGui::ColorEdit3("SkyColor", &uniforms.skyColor[0])) {
-            shader->setVec3("SkyColor", uniforms.skyColor);
-        }
-        if (ImGui::ColorEdit3("VoidColor", &uniforms.voidColor[0])) {
-            shader->setVec3("VoidColor", uniforms.voidColor);
-        }
-        if (ImGui::ColorEdit3("NightColor", &uniforms.nightColor[0])) {
-            shader->setVec3("NightColor", uniforms.nightColor);
-        }
-        ImGui::PushItemWidth(buttonSize.x);
-        ImGui::PopItemWidth();
+    if (ImGui::ColorEdit3("SkyColor", &uniforms.skyColor[0]))
+        shader->setVec3("SkyColor", uniforms.skyColor);
+    if (ImGui::ColorEdit3("VoidColor", &uniforms.voidColor[0]))
+        shader->setVec3("VoidColor", uniforms.voidColor);
+    if (ImGui::ColorEdit3("NightColor", &uniforms.nightColor[0]))
+        shader->setVec3("NightColor", uniforms.nightColor);
+
+    std::string label("##uniform");
+    for (CustomUniform& uniform : uniforms.customUniforms) {
+        label += " ";
+
+        if (ImGui::ColorEdit3(label.c_str(), &uniform.value[0]))
+            shader->setVec3(uniform.name, uniform.value);
+        ImGui::SameLine();
+        if (ImGui::InputText(label.c_str(), uniform.name, 15))
+            shader->setVec3(uniform.name, uniform.value);
+    }
+    ImGui::PushItemWidth(buttonSize.x);
+    ImGui::PopItemWidth();
+
+    if (ImGui::Button("Add New Uniform", buttonSize)) {
+        uniforms.customUniforms.push_back(CustomUniform((std::string("Uniform") + std::to_string(uniforms.customUniforms.size() + 1)).c_str(), glm::vec3(0)));
+    }
 
     if (ImGui::Button("Resume", buttonSize))
         Close();
