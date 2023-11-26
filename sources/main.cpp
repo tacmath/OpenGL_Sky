@@ -4,6 +4,8 @@
 #include "VBO.h"
 #include "Stars.h"
 #include "camera.h"
+#include <functional>
+#include "menu.h"
 
 std::string glStringEnum(GLenum glenum)
 {
@@ -60,9 +62,10 @@ static void debug(void) {
         }, 0);
 }
 
-#include <functional>
+
 struct EventData {
     Shader* shader;
+    Menu *menu;
     std::function<void(double mouseX, double mouseY)>					onMouseMouvement;
     std::function<void(int width, int height)>							onFramebufferSize;
 };
@@ -73,6 +76,7 @@ void run(const Window& window) {
     float time = 0;
     int status = 1;
     EventData eventData;
+    Menu    menu;
     Shader  shader;
     VBO     vbo;
     VAO     vao;
@@ -83,12 +87,15 @@ void run(const Window& window) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     eventData.shader = &shader;
+    eventData.menu = &menu;
     eventData.onMouseMouvement = [&](double mouseX, double mouseY) {
         static double lastMouseX = DEFAULT_WINDOW_WIDTH / 2;
         static double lastMouseY = DEFAULT_WINDOW_HEIGHT / 2;
         
-        camera.Rotate((float)(mouseX - lastMouseX) * 0.5f, (float)(mouseY - lastMouseY) * 0.5f);
-        camera.Update();
+        if (!menu.IsOpen()) {
+            camera.Rotate((float)(mouseX - lastMouseX) * 0.5f, (float)(mouseY - lastMouseY) * 0.5f);
+            camera.Update();
+        }
         stars.SetVP(camera);
         glm::mat4 IVP = glm::inverse(camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView())));
         shader.setMat4("IVP", IVP);
@@ -104,6 +111,7 @@ void run(const Window& window) {
     glfwSetWindowUserPointer(window.context, &eventData);
     glfwSetKeyCallback(window.context, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         static Shader* shader = ((EventData*)glfwGetWindowUserPointer(window))->shader;
+        static Menu* menu = ((EventData*)glfwGetWindowUserPointer(window))->menu;
 
         if (key == GLFW_KEY_R && action == GLFW_PRESS) { // reload the shader when r is pressed
             Shader  newShader;
@@ -111,7 +119,10 @@ void run(const Window& window) {
             newShader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
             if (newShader.isCompiled())
                 *shader = std::move(newShader);
+            menu->UpdateUniforms();
         }
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            menu->Toogle();
     });
     glfwSetCursorPosCallback(window.context, [](GLFWwindow* window, double xpos, double ypos) {
         static EventData* callbacks = (EventData*)glfwGetWindowUserPointer(window);
@@ -122,12 +133,14 @@ void run(const Window& window) {
         static EventData* callbacks = (EventData*)glfwGetWindowUserPointer(window);
         callbacks->onFramebufferSize(width, height);
     });
+    menu.Link(&window, &shader);
+    menu.InstallCallbacks();
     camera.Init((float)window.size.x, (float)window.size.y, glm::vec3(0));
     stars.SetVP(camera);
     shader.Load("shaders/skyVS.glsl", "shaders/skyFS.glsl");
-    shader.Activate();
     glm::mat4 IVP = glm::inverse(camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView())));
     shader.setMat4("IVP", IVP);
+    menu.UpdateUniforms();
     vbo.Gen(vertices, sizeof(vertices));
     vao.Gen();
     vao.LinkAttrib(vbo, 0, 2, GL_FLOAT, sizeof(float), 0);
@@ -138,7 +151,7 @@ void run(const Window& window) {
         diff = time - previousFrameTime;
         if (diff >= 0.03f) {
             glfwPollEvents();
-            if (glfwWindowShouldClose(window.context) == 1 || glfwGetKey(window.context, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            if (glfwWindowShouldClose(window.context) == 1)
                 status = 0;
 
             shader.setFloat("time", time);
@@ -148,6 +161,7 @@ void run(const Window& window) {
             shader.Activate();
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             stars.Draw();
+            menu.Draw();
             glfwSwapBuffers(window.context);
             previousFrameTime = time/* - (diff - MIN_FRAME_DELAY)*/;
         }

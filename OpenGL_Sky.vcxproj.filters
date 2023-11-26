@@ -36,6 +36,9 @@
     <ClInclude Include="sources\camera.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="sources\menu.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\main.cpp">
@@ -57,6 +60,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="sources\camera.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\menu.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

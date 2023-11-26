@@ -9,5 +9,5 @@ uniform vec3 sunPos;
 void main()
 {   
     gl_Position = matrix * vec4(aPos, 1.0f);
-    alpha = smoothstep(-0.2f, 1.0f, dot(sunPos, vec3(0, -1, 0)));
+    alpha = smoothstep(-0.3f, 0.6f, dot(sunPos, vec3(0, -1, 0)));
 }

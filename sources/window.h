@@ -71,6 +71,12 @@ public:
         glfwSetWindowMonitor(context, nullptr, 0, 0, size.x, size.y, mode->refreshRate);
     }
 
+    void Windowed(int witdth, int height) {
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        size = glm::ivec2(witdth, height);
+        glfwSetWindowMonitor(context, nullptr, 0, 0, size.x, size.y, mode->refreshRate);
+    }
+
     void SetWiewPort(void) {
         int width, height;
         glfwGetFramebufferSize(context, &width, &height);

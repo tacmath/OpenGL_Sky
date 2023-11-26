@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="sources\camera.h" />
     <ClInclude Include="sources\glad.h" />
+    <ClInclude Include="sources\menu.h" />
     <ClInclude Include="sources\shader.h" />
     <ClInclude Include="sources\Stars.h" />
     <ClInclude Include="sources\VAO.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="sources\camera.cpp" />
     <ClCompile Include="sources\glad.c" />
     <ClCompile Include="sources\main.cpp" />
+    <ClCompile Include="sources\menu.cpp" />
     <ClCompile Include="sources\shader.cpp" />
     <ClCompile Include="sources\Stars.cpp" />
     <ClCompile Include="sources\VAO.cpp" />

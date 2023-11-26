@@ -32,7 +32,7 @@ public:
         ID = 0;
     }
 
-    bool isCompiled() {
+    bool isCompiled() const {
         GLint hasCompiled = 0;
         glGetProgramiv(ID, GL_LINK_STATUS, &hasCompiled);
         return hasCompiled;
@@ -47,28 +47,28 @@ public:
         return (*this);
     }
     
-    void setMat4(const char* name, const glm::mat4& matrix) {
+    void setMat4(const char* name, const glm::mat4& matrix) const {
         glProgramUniformMatrix4fv(ID, glGetUniformLocation(ID, name), 1, GL_FALSE, &matrix[0][0]);
     }
-    void setMat4(const char* name, int numbers, const glm::mat4* matrix) {
+    void setMat4(const char* name, int numbers, const glm::mat4* matrix) const {
         glProgramUniformMatrix4fv(ID, glGetUniformLocation(ID, name), numbers, GL_FALSE, &matrix[0][0][0]);
     }
-    void setVec3(const char* name, const glm::vec3& vector) {
+    void setVec3(const char* name, const glm::vec3& vector) const {
         glProgramUniform3fv(ID, glGetUniformLocation(ID, name), 1, &vector[0]);
     }
-    void setVec3(const char* name, float x, float y, float z) {
+    void setVec3(const char* name, float x, float y, float z) const {
         glProgramUniform3f(ID, glGetUniformLocation(ID, name), x, y, z);
     }
-    inline void setVec2(const char* name, float x, float y) {
+    inline void setVec2(const char* name, float x, float y) const {
         glProgramUniform2f(ID, glGetUniformLocation(ID, name), x, y);
     }
-    inline void setVec2(const char* name, int x, int y) {
+    inline void setVec2(const char* name, int x, int y) const {
         glProgramUniform2i(ID, glGetUniformLocation(ID, name), x, y); //maybe change it to calculate glGetUniformLocation only once
     }
-    void setInt(const char* name, int value) {
+    void setInt(const char* name, int value) const {
         glProgramUniform1i(ID, glGetUniformLocation(ID, name), value);
     }
-    void setFloat(const char* name, float value) {
+    void setFloat(const char* name, float value) const {
         glProgramUniform1f(ID, glGetUniformLocation(ID, name), value);
     }
 
