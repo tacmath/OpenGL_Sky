@@ -34,7 +34,7 @@ void Menu::Delete() {
     ImGui::DestroyContext();
 }
 
-void Menu::Link(const Window *window, const Shader* shader) {
+void Menu::Link(const Window *window, const Shader *shader) {
     this->window = window;
     this->shader = shader;
     SetupImgui();
@@ -81,6 +81,7 @@ void Menu::UpdateUniforms() {
     shader->setVec3("SkyColor", uniforms.skyColor);
     shader->setVec3("VoidColor", uniforms.voidColor);
     shader->setVec3("NightColor", uniforms.nightColor);
+    shader->setVec3("SunColor", uniforms.sunColor);
     for (const CustomUniform& uniform : uniforms.customUniforms) {
         shader->setVec3(uniform.name, uniform.value);
     }
@@ -102,6 +103,8 @@ void Menu::DrawMenu() {
         shader->setVec3("VoidColor", uniforms.voidColor);
     if (ImGui::ColorEdit3("NightColor", &uniforms.nightColor[0]))
         shader->setVec3("NightColor", uniforms.nightColor);
+    if (ImGui::ColorEdit3("SunColor", &uniforms.sunColor[0]))
+        shader->setVec3("SunColor", uniforms.sunColor);
 
     std::string label("##uniform");
     for (CustomUniform& uniform : uniforms.customUniforms) {

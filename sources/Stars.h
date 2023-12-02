@@ -55,8 +55,8 @@ public:
 
 private:
 	void InitStars() {
-		glm::vec4 starData[] = {glm::vec4(-HALF_STAR_SIZE,-HALF_STAR_SIZE, 0, 1),
-								glm::vec4(-HALF_STAR_SIZE,HALF_STAR_SIZE, 0, 1),
+		glm::vec4 starData[] = {glm::vec4(-HALF_STAR_SIZE,-HALF_STAR_SIZE, 0, 1), // try to use GL_TRIANGLE_STRIP to gain 1-2 vertices and test perf with the patern 1 2 3 4  4 5 6 7  7 8 9 10  10
+								glm::vec4(-HALF_STAR_SIZE,HALF_STAR_SIZE, 0, 1),  // or test with indices 
 								glm::vec4(HALF_STAR_SIZE,-HALF_STAR_SIZE, 0, 1),
 
 								glm::vec4(HALF_STAR_SIZE,-HALF_STAR_SIZE, 0, 1),

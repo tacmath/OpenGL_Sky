@@ -8,7 +8,7 @@ Camera::Camera() {
 	pitch = 0;
 	yaw = 90;
 	position = glm::vec3(0.0f);
-	direction = glm::vec3(0.0f, 0.0f, -1.0f);
+	direction = glm::vec3(0.0f, 0.0f, 1.0f);
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
@@ -47,6 +47,8 @@ void Camera::SetPosition(glm::vec3 pos) {
 //set the divection of the camera
 void Camera::SetDirection(glm::vec3 direction) {
 	this->direction = direction;
+	pitch = asin(-direction.y) * 180 / 3.14f;
+	yaw = atan2(direction.z, direction.x) * 180 / 3.14f;
 }
 
 // change the prespective matrix

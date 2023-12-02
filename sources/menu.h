@@ -21,12 +21,14 @@ struct Uniforms {
     glm::vec3 skyColor;
     glm::vec3 voidColor;
     glm::vec3 nightColor;
+    glm::vec3 sunColor;
     std::vector<CustomUniform> customUniforms;
 
     Uniforms() {
-        skyColor = glm::vec3(0.047f, 0.622f, 0.8f);
-        voidColor = glm::vec3(0.9f, 0.95f, 0.95f);
-        nightColor = glm::vec3(0, 0, 0.12f);
+        skyColor = glm::vec3(0.047f, 0.415f, 0.8f);
+        voidColor = glm::vec3(0.48f, 0.82f, 0.99f);
+        nightColor = glm::vec3(0.04, 0.12, 0.25f);
+        sunColor = glm::vec3(1.0f, 0.53f, 0.0f);
     }
 };
 
