@@ -81,6 +81,7 @@ void main()
 
     color += noise(coord * 1000) * 0.01;
 
+    //color = (coord.y > -0.01 && coord.y < 0.01) ? vec3(0) : color; // horizon
 
   //  vec3 day_extinction = exp(-exp(-((pos.y + fsun.y * 4.0) * (exp(-pos.y * 16.0) + 0.1) / 80.0) / Br) * (exp(-pos.y * 16.0) + 0.1) * Kr / Br) * exp(-pos.y * exp(-pos.y * 8.0 ) * 4.0) * exp(-pos.y * 2.0) * 4.0;
     
