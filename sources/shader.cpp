@@ -127,9 +127,9 @@ void Shader::compileErrors(unsigned int shader, const char* type)
     }
 }
 
-// reload the chader if its files have been modified and return 1 if a modification happend or 0 if it was not modified
+// reload the shader if its files have been modified and return 1 if a modification happend or 0 if it was not modified
 int  reloadSaderIfModified(Shader& shader, const char* VS, const char* FS) {
-    static time_t LastUpdateTime[2] = { 0, 0 };
+    static time_t LastUpdateTime[2] = { 0, 0 }; //if multiples shaders need to be modified use a static unhordered_map since this function is mostly for debugging
     struct stat result[2];
     Shader  newShader;
 
