@@ -45,8 +45,8 @@ void main()
 
     color += noise(coord * 1000) * 0.01;
 
-    //color = (coord.y > -0.01 && coord.y < 0.01) ? vec3(0) : color; // horizon
+   // color = (coord.y > -0.001 && coord.y < 0.001) ? vec3(0) : color; // horizon
 
  //   color = pow(1.0 - exp(-1.3 * color), vec3(1.3));
-    FragColor = vec4(color, 1.0f);
+    FragColor = vec4(color,1.0f);
 }

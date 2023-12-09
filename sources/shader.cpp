@@ -126,3 +126,28 @@ void Shader::compileErrors(unsigned int shader, const char* type)
         std::cout << "SHADER_COMPILATION_ERROR for:" << type << "\n" << infoLog << std::endl;
     }
 }
+
+// reload the chader if its files have been modified and return 1 if a modification happend or 0 if it was not modified
+int  reloadSaderIfModified(Shader& shader, const char* VS, const char* FS) {
+    static time_t LastUpdateTime[2] = { 0, 0 };
+    struct stat result[2];
+    Shader  newShader;
+
+    if (stat(VS, &result[0]) || stat(FS, &result[1]))
+        return 0;
+    if (!LastUpdateTime[0]) {
+        LastUpdateTime[0] = result[0].st_mtime;
+        LastUpdateTime[1] = result[1].st_mtime;
+    }
+    if (LastUpdateTime[0] == result[0].st_mtime && LastUpdateTime[1] == result[1].st_mtime)
+        return 0;
+    LastUpdateTime[0] = result[0].st_mtime;
+    LastUpdateTime[1] = result[1].st_mtime;
+    newShader.Load(VS, FS);
+    if (newShader.isCompiled()) {
+        shader = std::move(newShader);
+        std::cout << "shader reloaded" << std::endl;
+        return 1;
+    }
+    return 0;
+}

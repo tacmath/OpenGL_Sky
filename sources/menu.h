@@ -54,7 +54,7 @@ public:
 
     void Draw();
 
-    void UpdateUniforms();
+    void UpdateUniforms() const;
 
     void InstallCallbacks() { ImGui_ImplGlfw_InstallCallbacks(window->context); };
 

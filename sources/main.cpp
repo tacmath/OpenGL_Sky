@@ -89,8 +89,8 @@ void run(const Window& window) {
     eventData.shader = &shader;
     eventData.menu = &menu;
     eventData.onMouseMouvement = [&](double mouseX, double mouseY) {
-        static double lastMouseX = DEFAULT_WINDOW_WIDTH / 2;
-        static double lastMouseY = DEFAULT_WINDOW_HEIGHT / 2;
+        static double lastMouseX = mouseX;
+        static double lastMouseY = mouseY;
         
         if (!menu.IsOpen()) {
             camera.Rotate((float)(mouseX - lastMouseX) * 0.5f, (float)(mouseY - lastMouseY) * 0.5f);
@@ -153,7 +153,11 @@ void run(const Window& window) {
             glfwPollEvents();
             if (glfwWindowShouldClose(window.context) == 1)
                 status = 0;
-
+            if (reloadSaderIfModified(shader, "shaders/skyVS.glsl", "shaders/skyFS.glsl")) {
+                menu.UpdateUniforms();
+                glm::mat4 IVP = glm::inverse(camera.GetProjection() * glm::mat4(glm::mat3(camera.GetView())));
+                shader.setMat4("IVP", IVP);
+            }
             shader.setFloat("time", time);
             shader.setVec3("sunPos", glm::vec3(0.0, sin(time * 0.2), cos(time * 0.2)));
             glClear(GL_COLOR_BUFFER_BIT);

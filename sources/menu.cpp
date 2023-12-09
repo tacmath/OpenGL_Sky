@@ -77,7 +77,7 @@ void Menu::fpsTitle(float time, float latence) {
     }*/
 }
 
-void Menu::UpdateUniforms() {
+void Menu::UpdateUniforms() const {
     shader->setVec3("SkyColor", uniforms.skyColor);
     shader->setVec3("VoidColor", uniforms.voidColor);
     shader->setVec3("NightColor", uniforms.nightColor);

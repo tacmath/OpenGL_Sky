@@ -79,5 +79,7 @@ private:
     char* getShaderSource(const char* fileName);
 };
 
+int  reloadSaderIfModified(Shader& shader, const char* VS, const char* FS);
+
 #endif
 
