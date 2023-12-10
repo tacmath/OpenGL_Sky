@@ -144,10 +144,9 @@ int  reloadSaderIfModified(Shader& shader, const char* VS, const char* FS) {
     LastUpdateTime[0] = result[0].st_mtime;
     LastUpdateTime[1] = result[1].st_mtime;
     newShader.Load(VS, FS);
-    if (newShader.isCompiled()) {
-        shader = std::move(newShader);
-        std::cout << "shader reloaded" << std::endl;
-        return 1;
-    }
-    return 0;
+    if (!newShader.isCompiled())
+        return 0;
+    shader = std::move(newShader);
+    std::cout << "shader reloaded" << std::endl;
+    return 1;
 }
